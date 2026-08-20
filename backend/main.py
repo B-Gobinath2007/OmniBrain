@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from backend.config import settings
 from backend.utils.logger import logger
+from backend.routes import upload, query
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,10 +17,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Include routers
+app.include_router(upload.router)
+app.include_router(query.router)
+
 @app.get("/", status_code=200)
 async def root_endpoint():
     logger.debug("Root endpoint GET / called")
     return {
-        "message": "OmniBrain API is running",
-        "version": "1.0.0"
+        "message": "OmniBrain API is running"
     }
